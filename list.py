@@ -1,18 +1,7 @@
 import os
 import json
 from math import floor, inf
-import argparse
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("-f", "--file", type=str, required=True)
-parser.add_argument("-d", "--defs", type=str, required=True)
-parser.add_argument("n", type=int, default=1, nargs="?")
-args = parser.parse_args()
-
-
-file_data = os.path.abspath(os.path.expanduser(args.file))
-file_defs = os.path.abspath(os.path.expanduser(args.defs))
 
 class colors():
     BLACK = '\033[30m'
@@ -127,29 +116,31 @@ def get_last_value(data, key):
     return None
 
 
-with open(file_data) as f:
-    data = json.load(f)
+def main(args):
+    file_data = os.path.abspath(os.path.expanduser(args.file))
+    file_defs = os.path.abspath(os.path.expanduser(args.defs))
 
-with open(file_defs) as f:
-    defs = json.load(f)
+    with open(file_data) as f:
+        data = json.load(f)
 
+    with open(file_defs) as f:
+        defs = json.load(f)
 
-entry_id = -args.n
-entry = data[entry_id]
-data_old = data[entry_id-1::-1]
+    entry_id = -args.n
+    entry = data[entry_id]
+    data_old = data[entry_id-1::-1]
 
-date_str = "\n" + colors.BLACK_BRIGHT + entry["date"] + colors.RESET
-first_line = f"{date_str} {entry["note"]}\n"
-print(first_line)
+    date_str = "\n" + colors.BLACK_BRIGHT + entry["date"] + colors.RESET
+    first_line = f"{date_str} {entry["note"]}\n"
+    print(first_line)
 
-header_line = get_header_line()
-print(header_line)
+    header_line = get_header_line()
+    print(header_line)
 
+    for key, value in entry["data"].items():
 
-for key, value in entry["data"].items():
+        value_last = get_last_value(data_old, key)
+        field_def = defs.get(key)
 
-    value_last = get_last_value(data_old, key)
-    field_def = defs.get(key)
-
-    field_line = get_field_line(key, value, value_last, field_def)
-    print(field_line)
+        field_line = get_field_line(key, value, value_last, field_def)
+        print(field_line)
