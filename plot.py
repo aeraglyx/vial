@@ -6,14 +6,14 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--file", type=str, required=True)
+parser.add_argument("-d", "--defs", type=str, required=True)
 parser.add_argument("names", nargs="+", default=[])
 args = parser.parse_args()
 
 
-# TODO: pass filepaths
-data_path = os.path.expanduser("~")
-file_data = os.path.join(data_path, "data.json")
-file_defs = os.path.join(data_path, "defs.json")
+file_data = os.path.abspath(os.path.expanduser(args.file))
+file_defs = os.path.abspath(os.path.expanduser(args.defs))
 
 
 with open(file_data) as f:
