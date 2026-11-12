@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", type=str, required=True)
 parser.add_argument("-d", "--defs", type=str, required=True)
 
-sub = parser.add_subparsers(dest="cmd")
+sub = parser.add_subparsers(dest="cmd", required=True)
 
 parser_list = sub.add_parser("list")
 parser_list.add_argument("n", type=int, default=1, nargs="?")
